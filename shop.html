@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ととむすめ - 釣具店</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-bar">
+            <a class="back-button" href="index.html">← ホームに戻る</a>
+            <div class="player-info">
+                <span>所持金: <span id="money">1000</span>円</span>
+            </div>
+        </div>
+        
+        <div class="shop-area">
+            <h2 class="shop-title">釣具店</h2>
+            
+            <div class="gacha-section">
+                <div class="gacha-info">
+                    <p>1回100円</p>
+                </div>
+                <button id="gacha-button" class="gacha-button">ガチャを引く</button>
+            </div>
+
+            <div class="item-list">
+                <h3>タックルボックス</h3>
+                <div id="item-grid" class="item-grid">
+                    <!-- アイテムリストがここに表示されます -->
+                </div>
+            </div>
+        </div>
+
+        <div class="popup hidden" id="gacha-result">
+            <div class="popup-content">
+                <h2>ガチャ結果</h2>
+                <div id="result-content"></div>
+                <button id="close-result" class="action-button">閉じる</button>
+            </div>
+        </div>
+    </div>
+    <script src="shop.js"></script>
+</body>
+</html>

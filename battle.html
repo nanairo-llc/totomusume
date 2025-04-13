@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ととむすめ - 水泳大会</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-bar">
+            <a class="back-button" href="index.html">← ホームに戻る</a>
+            <div class="player-info">
+                <span>勝利数: <span id="win-count">0</span></span>
+            </div>
+        </div>
+        
+        <div class="battle-area">
+            <h2 class="battle-title">水泳大会</h2>
+            
+            <div class="battle-preparation">
+                <h3>参加するとと娘を選んでください</h3>
+                <div id="tot-selection" class="tot-selection">
+                    <!-- とと娘選択リストがここに表示されます -->
+                </div>
+            </div>
+
+            <div class="battle-field hidden" id="battle-field">
+                <div class="race-info">
+                    <p>25mフリーレース</p>
+                    <p class="vs-text">第1レーン <span id="player-name"></span> VS 第2レーン <span id="opponent-name"></span></p>
+                </div>
+                
+                <div class="race-course">
+                    <div class="lane lane-1">
+                        <div class="swimmer" id="player-swimmer">
+                            <img id="player-image" src="" alt="">
+                        </div>
+                    </div>
+                    <div class="lane lane-2">
+                        <div class="swimmer" id="opponent-swimmer">
+                            <img id="opponent-image" src="" alt="">
+                        </div>
+                    </div>
+                    <div class="goal-line"></div>
+                </div>
+
+                <button id="start-battle" class="action-button">レースを開始</button>
+            </div>
+        </div>
+
+        <div class="popup hidden" id="battle-result">
+            <div class="popup-content">
+                <div id="result-content"></div>
+                <button id="close-result" class="action-button">閉じる</button>
+            </div>
+        </div>
+    </div>
+    <script src="battle.js"></script>
+</body>
+</html>

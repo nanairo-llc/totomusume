@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ととむすめ - 水槽</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-bar">
+            <a class="back-button" href="index.html">← ホームに戻る</a>
+            <div class="player-info">
+                <span>餌の数: <span id="food-count">5</span></span>
+            </div>
+        </div>
+        
+        <div class="aquarium-area">
+            <h2>飼育中のとと娘</h2>
+            <div id="tot-list" class="tot-list">
+                <!-- とと娘リストがここに表示されます -->
+            </div>
+
+            <div id="aquarium-detail" class="aquarium-detail hidden">
+                <img id="detail-image" src="" alt="">
+                <h3 id="detail-name"></h3>
+                <div class="affection-meter">
+                    <div class="affection-bar">
+                        <div id="affection-fill" class="affection-fill"></div>
+                    </div>
+                    <p>親密度: <span id="detail-affection">0</span></p>
+                </div>
+                <div class="action-buttons">
+                    <button id="feed-button" class="action-button">
+                        <span>餌をあげる</span>
+                        <small>（親密度+1）</small>
+                    </button>
+                    <button id="play-button" class="action-button">
+                        <span>一緒に遊ぶ</span>
+                        <small>（親密度+2）</small>
+                    </button>
+                </div>
+                <button id="close-detail" class="action-button">閉じる</button>
+            </div>
+        </div>
+    </div>
+    <script src="aquarium.js"></script>
+</body>
+</html>

@@ -1,0 +1,656 @@
+/* 共通スタイル */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #F8F7F6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    width: 800px;
+    height: 800px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.status-bar {
+    position: absolute; /* or fixed if you want it pinned regardless of scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: rgba(51, 51, 51, 0.5);
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+}
+
+.player-info {
+    display: flex;
+    gap: 20px;
+}
+
+.back-button {
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* ホーム画面のスタイル */
+.home-container {
+    width: 100%;
+    height: 100%;
+    padding: 40px;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    /* 背景画像を指定 */
+    background: url("images/world.png") no-repeat center center;
+    
+    /* 画像を要素の大きさに合わせて拡大・縮小 */
+    background-size: cover;
+}
+
+.title {
+    color: white;
+    font-size: 48px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+.game-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-button {
+    padding: 20px 40px;
+    font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #1E90FF;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.game-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.game-description {
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    max-width: 600px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 釣りエリアのスタイル */
+.fishing-area {
+    height: calc(100% - 40px);
+    overflow: hidden;
+    cursor: crosshair;
+     /* 背景画像を指定 */
+     background: url("images/sea.png") no-repeat center center;
+    
+     /* 画像を要素の大きさに合わせて拡大・縮小 */
+     background-size: cover;
+ 
+     /* コンテンツより背景が下に来るようにする */
+     position: relative;   
+}
+
+.fishing-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+    transition: height 0.5s ease-out;
+}
+
+/* 水槽画面のスタイル */
+.aquarium-area {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* 背景画像を指定 */
+    background: url("images/aquarium.png") no-repeat center center;
+    
+    /* 画像を要素の大きさに合わせて拡大・縮小 */
+    background-size: cover;
+}
+
+.aquarium-area h2 {
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.aquarium-detail {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+.aquarium-detail img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.affection-meter {
+    margin: 20px 0;
+}
+
+.affection-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.affection-fill {
+    height: 100%;
+    width: 0;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.tot-list {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+.tot-item {
+    flex: 0 0 200px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.tot-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.tot-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.tot-info img {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.tot-info h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.tot-info p {
+    font-size: 14px;
+    color: #666;
+}
+
+.release-button {
+    background-color: #FF4444;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 15px;
+}
+
+.release-button:hover {
+    background-color: #FF0000;
+}
+
+.release-button small {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.tot-list-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px; /* 必要に応じて高さを確保 */
+    /* 他に背景色を付けるなども可能 */
+}
+
+/* 釣具店のスタイル */
+.shop-area {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    padding-top: 80px;
+    background: linear-gradient(180deg, #87CEEB 0%, #1E90FF 100%);
+    /* 背景画像を指定 */
+    background: url("images/shop.png") no-repeat center center;
+    
+    /* 画像を要素の大きさに合わせて拡大・縮小 */
+    background-size: cover;
+
+    /* コンテンツより背景が下に来るようにする */
+    position: relative;    
+    overflow-y: auto;
+}
+
+.shop-title {
+    color: white;
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.gacha-section, .item-list {
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.item-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.item-card h4 {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.item-card p {
+    color: #666;
+    font-size: 14px;
+}
+
+.item-list h3 {
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.gacha-info {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.gacha-info p {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.gacha-button {
+    padding: 15px 40px;
+    font-size: 20px;
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto;
+}
+
+.gacha-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    background-color: #FF5252;
+}
+
+.gacha-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 水泳大会のスタイル */
+.battle-area {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    padding-top: 80px;
+    overflow-y: auto;
+    /* 背景画像を指定 */
+    background: url("images/race.png") no-repeat center center;
+    
+    /* 画像を要素の大きさに合わせて拡大・縮小 */
+    background-size: cover;
+
+    /* コンテンツより背景が下に来るようにする */
+    position: relative;    
+}
+
+.battle-title {
+    color: white;
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.battle-preparation {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.battle-preparation h3 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tot-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tot-select-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tot-select-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tot-select-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.battle-field {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.race-course {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin: 10px 0;
+    background: linear-gradient(0deg, rgba(30, 144, 255, 0.2) 0%, rgba(30, 144, 255, 0.1) 100%);
+    border-top: 2px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.lane {
+    position: absolute;
+    width: 100%;
+    height: 90px;
+    padding: 5px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.lane-1 {
+    top: 5px;
+    border-bottom: 2px solid white;
+}
+.lane-2 { top: 100px; }
+
+.swimmer {
+    position: absolute;
+    left: 20px;
+    width: 80px;
+    height: 80px;
+    transition: transform 0.1s linear;
+    transform: translateX(0);
+}
+
+.swimmer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.race-course {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin: 10px 0;
+    background: linear-gradient(0deg, rgba(30, 144, 255, 0.2) 0%, rgba(30, 144, 255, 0.1) 100%);
+    border-top: 2px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.goal-line {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background: repeating-linear-gradient(
+        45deg,
+        #FF4444,
+        #FF4444 10px,
+        #fff 10px,
+        #fff 20px
+    );
+}
+
+.race-info {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.vs-text {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.vs-text span {
+    color: #1E90FF;
+}
+
+/* 共通のボタンスタイル */
+.action-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: block;
+    margin: 0 auto;
+}
+
+.action-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.action-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ポップアップのスタイル */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 400px;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.popup-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+.popup-image {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 10px;
+    object-fit: contain;
+    display: block;
+}
+
+.catch-image {
+    width: 200px;
+    height: 300px;
+    margin: 20px auto;
+    border-radius: 10px;
+    object-fit: contain;
+    display: block;
+}
+
+/* その他の共通要素 */
+.hidden {
+    display: none;
+}
+
+.control-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.instructions {
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.explanation {
+    text-align: center;
+    color: white;
+}
+
+#item-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}

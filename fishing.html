@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ととむすめ - 釣りゲーム</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-bar">
+            <a class="back-button" href="index.html">← ホームに戻る</a>
+            <div class="player-info">
+                <span>釣り人レベル: <span id="player-level">1</span></span>
+                <span>釣った数: <span id="fish-count">0</span></span>
+                <span>天気: <span id="weather-info"></span></span>
+            </div>
+        </div>
+        
+        <div class="fishing-area">
+            <div class="water"></div>
+            <div id="fishing-line" class="fishing-line"></div>
+            <div class="control-panel">
+                <button id="fishing-button" class="action-button">釣りを始める</button>
+            </div>
+        </div>
+
+        <div id="result-popup" class="popup hidden">
+            <div class="popup-content">
+                <h2 id="result-title">釣れた！</h2>
+                <div id="catch-result"></div>
+                <button id="continue-button" class="action-button">続ける</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
