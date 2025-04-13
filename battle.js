@@ -79,9 +79,9 @@ class BattleGame {
         
         // 対戦相手の生成
         const opponents = [
-            { name: "速水さん", image: "images/seabass.PNG", level: 5 },
-            { name: "紅葉さん", image: "images/madai.PNG", level: 10 },
-            { name: "夜桜さん", image: "images/mebaru.PNG", level: 15 }
+            { name: "速水さん", image: "images/seabass.PNG", level: 80 },
+            { name: "紅葉さん", image: "images/madai.PNG", level: 50 },
+            { name: "夜桜さん", image: "images/mebaru.PNG", level: 30 }
         ];
         
         this.opponent = opponents[Math.floor(Math.random() * opponents.length)];
