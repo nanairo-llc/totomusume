@@ -82,14 +82,14 @@ class FishingGame {
 
     showLureDialog() {
         const lures = [
-            { name: '通常の釣り', baseRate: 5, type: 'normal' },
-            { name: 'キラキラミノー（赤）', baseRate: 30, type: 'red', count: this.items['キラキラミノー（赤）'] },
-            { name: 'キラキラミノー（緑）', baseRate: 30, type: 'green', count: this.items['キラキラミノー（緑）'] },
-            { name: 'キラキラミノー（金）', baseRate: 40, type: 'gold', count: this.items['キラキラミノー（金）'] },
-            { name: 'ドリームワーム（赤）', baseRate: 30, type: 'red', count: this.items['ドリームワーム（赤）'] },
-            { name: 'ドリームワーム（緑）', baseRate: 30, type: 'green', count: this.items['ドリームワーム（緑）'] },
-            { name: 'ドリームワーム（金）', baseRate: 40, type: 'gold', count: this.items['ドリームワーム（金）'] },
-            { name: 'ふわとろオキアミ団子', baseRate: 15, type: 'bait', count: this.items['ふわとろオキアミ団子'] }
+            { name: '通常の釣り', baseRate: 15, type: 'normal' },
+            { name: 'キラキラミノー（赤）', baseRate: 40, type: 'red', count: this.items['キラキラミノー（赤）'] },
+            { name: 'キラキラミノー（緑）', baseRate: 40, type: 'green', count: this.items['キラキラミノー（緑）'] },
+            { name: 'キラキラミノー（金）', baseRate: 50, type: 'gold', count: this.items['キラキラミノー（金）'] },
+            { name: 'ドリームワーム（赤）', baseRate: 40, type: 'red', count: this.items['ドリームワーム（赤）'] },
+            { name: 'ドリームワーム（緑）', baseRate: 40, type: 'green', count: this.items['ドリームワーム（緑）'] },
+            { name: 'ドリームワーム（金）', baseRate: 50, type: 'gold', count: this.items['ドリームワーム（金）'] },
+            { name: 'ふわとろオキアミ団子', baseRate: 25, type: 'bait', count: this.items['ふわとろオキアミ団子'] }
         ];
 
         let message = '使用する釣具を選んでください：\n\n';
