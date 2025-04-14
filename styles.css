@@ -70,7 +70,7 @@ body {
 }
 
 .title-logo {
-    width: 350px; /* 画像の幅を指定（必要に応じて調整） */
+    width: 200px; /* 画像の幅を指定（必要に応じて調整） */
     display: block;
     margin: 0 auto; /* 中央寄せ */
     filter: drop-shadow(0 0 4px white);
