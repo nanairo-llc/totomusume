@@ -47,7 +47,7 @@ class BattleGame {
         this.totSelection.innerHTML = '';
         
         if (!this.tots || this.tots.length === 0) {
-            this.totSelection.innerHTML = '<p style="text-align: center; padding: 20px;">まだとと娘が釣れていません。<br>釣りに行って、とと娘を見つけましょう！</p>';
+            this.totSelection.innerHTML = `<p style="text-align: center; padding: 20px;">${TEXT.BATTLE.EMPTY_STATE}</p>`;
             return;
         }
 
@@ -148,9 +148,9 @@ class BattleGame {
         }
         
         this.resultContent.innerHTML = `
-            <h2>${isWin ? '優勝！' : '惜しい！'}</h2>
-            <p>${isWin ? '見事な泳ぎでした！' : '良い勝負でした！'}</p>
-            <p>${isWin ? `報酬として500円を獲得しました！` : 'また挑戦してください！'}</p>
+            <h2>${isWin ? TEXT.BATTLE.WIN : TEXT.BATTLE.LOSE}</h2>
+            <p>${isWin ? TEXT.BATTLE.WIN_MESSAGE : TEXT.BATTLE.LOSE_MESSAGE}</p>
+            <p>${isWin ? TEXT.BATTLE.REWARD_MESSAGE : TEXT.BATTLE.TRY_AGAIN}</p>
         `;
         
         setTimeout(() => {
@@ -166,6 +166,7 @@ class BattleGame {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+    const { TEXT } = await import('./constants.js');
     new BattleGame();
 });
