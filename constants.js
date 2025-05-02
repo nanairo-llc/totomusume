@@ -1,9 +1,9 @@
 const TEXT = {
     AQUARIUM: {
         EMPTY_STATE: 'まだとと娘が釣れていません。<br>釣りに行って、とと娘を見つけましょう！',
-        RELEASE_CONFIRM: '{name}を放流しますか？\n報酬として30円を獲得できます。',
-        RELEASE_SUCCESS: '放流しました。報酬として30円を獲得しました！',
-        NO_FOOD: '餌がありません！\n釣具店でふっくら特製イワシを入手しましょう。'
+        RELEASE_CONFIRM: '{name}を放流しますか？\n報酬30円を獲得できます。',
+        RELEASE_SUCCESS: '放流しました。報酬30円を獲得！',
+        NO_FOOD: '餌がありません！\n釣具店で餌を入手しましょう。'
     },
     FISHING: {
         SELECT_LURE: '使用する釣具を選んでください：\n\n',
@@ -20,7 +20,7 @@ const TEXT = {
         LOSE: '惜しい！',
         WIN_MESSAGE: '見事な泳ぎでした！',
         LOSE_MESSAGE: '良い勝負でした！',
-        REWARD_MESSAGE: '報酬として500円を獲得しました！',
+        REWARD_MESSAGE: '報酬500円を獲得！',
         TRY_AGAIN: 'また挑戦してください！'
     },
     WEATHER: {
