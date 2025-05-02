@@ -51,7 +51,7 @@ class AquariumGame {
         if (this.tots.length === 0) {
             // アイテムがない状態 → 空状態クラスを付与
             this.totList.classList.add('tot-list-empty');
-            this.totList.innerHTML = '<p class="explanation" style="text-align: center; padding: 20px;">まだとと娘が釣れていません。<br>釣りに行って、とと娘を見つけましょう！</p>';
+            this.totList.innerHTML = `<p class="explanation" style="text-align: center; padding: 20px;">${TEXT.AQUARIUM.EMPTY_STATE}</p>`;
             return;
         } else {
             // アイテムがある状態 → クラスを外す
@@ -85,7 +85,7 @@ class AquariumGame {
 
     releaseTot(index) {
         const tot = this.tots[index];
-        if (confirm(`${tot.name}を放流しますか？\n報酬として30円を獲得できます。`)) {
+        if (confirm(TEXT.AQUARIUM.RELEASE_CONFIRM.replace('{name}', tot.name))) {
             // とと娘を放流（配列から削除）
             this.tots.splice(index, 1);
             
@@ -98,7 +98,7 @@ class AquariumGame {
             // リストを更新
             this.displayTotGirls();
             
-            alert('放流しました。報酬として30円を獲得しました！');
+            alert(TEXT.AQUARIUM.RELEASE_SUCCESS);
         }
     }
 
@@ -111,9 +111,8 @@ class AquariumGame {
         this.detailName.textContent = tot.name;
         this.detailAffection.textContent = tot.affection || 0;
         
-        // 親密度メーターの更新（最大100として計算）
-        const affectionPercent = Math.min(100, ((tot.affection || 0) / 100) * 100);
-        this.affectionFill.style.width = `${affectionPercent}%`;
+        // 親密度メーターの更新
+        this.updateAffectionMeter(tot.affection || 0);
         
         this.aquariumDetail.classList.remove('hidden');
     }
@@ -123,9 +122,19 @@ class AquariumGame {
         this.currentTotIndex = null;
     }
 
+    calculateAffectionPercent(affection) {
+        return Math.min(100, (affection / 100) * 100);
+    }
+
+    // 親密度メーターの更新ヘルパーメソッド
+    updateAffectionMeter(affection) {
+        const affectionPercent = this.calculateAffectionPercent(affection);
+        this.affectionFill.style.width = `${affectionPercent}%`;
+    }
+
     feedTot() {
         if (this.food <= 0) {
-            alert('餌がありません！\n釣具店でふっくら特製イワシを入手しましょう。');
+            alert(TEXT.AQUARIUM.NO_FOOD);
             return;
         }
 
@@ -137,8 +146,7 @@ class AquariumGame {
         this.detailAffection.textContent = tot.affection;
         
         // 親密度メーターの更新
-        const affectionPercent = Math.min(100, (tot.affection / 100) * 100);
-        this.affectionFill.style.width = `${affectionPercent}%`;
+        this.updateAffectionMeter(tot.affection);
         
         this.saveGameState();
         this.displayTotGirls();
@@ -150,8 +158,7 @@ class AquariumGame {
         this.detailAffection.textContent = tot.affection;
         
         // 親密度メーターの更新
-        const affectionPercent = Math.min(100, (tot.affection / 100) * 100);
-        this.affectionFill.style.width = `${affectionPercent}%`;
+        this.updateAffectionMeter(tot.affection);
         
         this.saveGameState();
         this.displayTotGirls();
@@ -159,6 +166,7 @@ class AquariumGame {
 }
 
 // ゲームの初期化
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+    const { TEXT } = await import('./constants.js');
     new AquariumGame();
 });

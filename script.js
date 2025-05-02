@@ -28,19 +28,7 @@ class FishingGame {
         const weathers = ['sunny', 'cloudy', 'rainy'];
         this.currentWeather = weathers[Math.floor(Math.random() * weathers.length)];
         
-        const weatherEmoji = {
-            sunny: '☀️',
-            cloudy: '☁️',
-            rainy: '🌧️'
-        };
-        
-        const weatherText = {
-            sunny: '晴れ',
-            cloudy: '曇り',
-            rainy: '雨'
-        };
-        
-        this.weatherInfo.textContent = `${weatherEmoji[this.currentWeather]} ${weatherText[this.currentWeather]}`;
+        this.weatherInfo.textContent = `${WEATHER_EMOJI[this.currentWeather]} ${TEXT.WEATHER[this.currentWeather.toUpperCase()]}`;
     }
 
     loadGameState() {
@@ -82,7 +70,7 @@ class FishingGame {
 
     showLureDialog() {
         const lures = [
-            { name: '通常の釣り', baseRate: 20, type: 'normal' },
+            { name: TEXT.FISHING.NORMAL_FISHING, baseRate: 20, type: 'normal' },
             { name: 'キラキラミノー（赤）', baseRate: 45, type: 'red', count: this.items['キラキラミノー（赤）'] },
             { name: 'キラキラミノー（緑）', baseRate: 45, type: 'green', count: this.items['キラキラミノー（緑）'] },
             { name: 'キラキラミノー（金）', baseRate: 60, type: 'gold', count: this.items['キラキラミノー（金）'] },
@@ -92,8 +80,8 @@ class FishingGame {
             { name: 'ふわとろオキアミ団子', baseRate: 50, type: 'bait', count: this.items['ふわとろオキアミ団子'] }
         ];
 
-        let message = '使用する釣具を選んでください：\n\n';
-        message += '0: 通常の釣り\n';
+        let message = TEXT.FISHING.SELECT_LURE;
+        message += `0: ${TEXT.FISHING.NORMAL_FISHING}\n`;
         lures.slice(1).forEach((lure, index) => {
             if (lure.count > 0) {
                 message += `${index + 1}: ${lure.name} (所持数: ${lure.count})\n`;
@@ -105,13 +93,13 @@ class FishingGame {
         
         const selectedIndex = parseInt(choice);
         if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= lures.length) {
-            alert('無効な選択です。通常の釣りを行います。');
+            alert(TEXT.FISHING.INVALID_CHOICE);
             return lures[0];
         }
 
         const selectedLure = lures[selectedIndex];
         if (selectedIndex > 0 && selectedLure.count <= 0) {
-            alert('選択した釣具を所持していません。通常の釣りを行います。');
+            alert(TEXT.FISHING.NO_LURE);
             return lures[0];
         }
 
@@ -124,31 +112,30 @@ class FishingGame {
     }
 
     calculateCatchRate(lure) {
+        // 金色のルアーと餌は天気の影響を受けない
+        if (lure.type === 'gold' || lure.type === 'bait') {
+            return lure.baseRate;
+        }
+        
         let rate = lure.baseRate;
-
+        
         // 天気による補正
-        switch (this.currentWeather) {
-            case 'sunny':
-                if (lure.type === 'green') rate *= 1.5;
-                break;
-            case 'cloudy':
-                if (lure.type === 'red') rate *= 1.5;
-                break;
-            case 'rainy':
-                rate *= 0.7;
-                break;
+        const weatherModifiers = {
+            sunny: { type: 'green', modifier: 1.5 },
+            cloudy: { type: 'red', modifier: 1.5 },
+            rainy: { modifier: 0.7 }
+        };
+        
+        const weatherEffect = weatherModifiers[this.currentWeather];
+        
+        if (weatherEffect) {
+            if (weatherEffect.type && lure.type === weatherEffect.type) {
+                rate *= weatherEffect.modifier;
+            } else if (weatherEffect.modifier && !weatherEffect.type) {
+                rate *= weatherEffect.modifier;
+            }
         }
-
-        // 金色のルアーは天気の影響を受けない
-        if (lure.type === 'gold') {
-            rate = lure.baseRate;
-        }
-
-        // 餌は天気の影響を受けないが、基本確率が低い
-        if (lure.type === 'bait') {
-            rate = lure.baseRate;
-        }
-
+        
         return rate;
     }
 
@@ -217,20 +204,22 @@ class FishingGame {
         const savedTots = localStorage.getItem('caughtTots');
         const tots = savedTots ? JSON.parse(savedTots) : [];
         
-        tots.push({
+        const newTot = {
             name: caught.name,
             rarity: caught.rarity,
             description: caught.description,
             image: caught.image,
-            affection: 0
-        });
+            affection: 0  // 親密度は明示的に0から開始
+        };
+        
+        tots.push(newTot);
         
         localStorage.setItem('caughtTots', JSON.stringify(tots));
     }
 
     showCatchResult(caught) {
         const resultTitle = document.getElementById('result-title');
-        resultTitle.textContent = '釣れた！';
+        resultTitle.textContent = TEXT.FISHING.CATCH_SUCCESS;
         this.catchResult.innerHTML = `
             <img src="${caught.image}" alt="${caught.name}" class="catch-image">
             <h3>${caught.name}</h3>
@@ -242,10 +231,9 @@ class FishingGame {
 
     showFailResult() {
         const resultTitle = document.getElementById('result-title');
-        resultTitle.textContent = '残念！';
+        resultTitle.textContent = TEXT.FISHING.CATCH_FAIL;
         this.catchResult.innerHTML = `
-            <p>何も釣れませんでした。</p>
-            <p>違う釣具を試してみましょう。</p>
+            <p>${TEXT.FISHING.CATCH_FAIL_MESSAGE}</p>
         `;
         this.resultPopup.classList.remove('hidden');
     }
@@ -265,6 +253,7 @@ class FishingGame {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+    const { TEXT, WEATHER_EMOJI } = await import('./constants.js');
     new FishingGame();
 });

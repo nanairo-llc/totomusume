@@ -1,3 +1,24 @@
+/* カラー変数 */
+:root {
+    --primary-color: #1E90FF;
+    --primary-light: rgba(30, 144, 255, 0.2);
+    --primary-lighter: rgba(30, 144, 255, 0.1);
+    --secondary-color: #4CAF50;
+    --danger-color: #FF4444;
+    --danger-dark: #FF0000;
+    --warning-color: #FF6B6B;
+    --warning-dark: #FF5252;
+    --background-color: #F8F7F6;
+    --white: #fff;
+    --black: #333;
+    --gray: #666;
+    --light-gray: #eee;
+    --disabled: #cccccc;
+    --overlay: rgba(0, 0, 0, 0.7);
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --hover-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
 /* 共通スタイル */
 * {
     margin: 0;
@@ -7,7 +28,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #F8F7F6;
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,7 +52,7 @@ body {
     width: 100%;
     z-index: 999;
     background-color: rgba(51, 51, 51, 0.5);
-    color: white;
+    color: var(--white);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -87,12 +108,12 @@ body {
     padding: 20px 40px;
     font-size: 24px;
     background-color: rgba(255, 255, 255, 0.9);
-    color: #1E90FF;
+    color: var(--primary-color);
     border: none;
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
 }
 
 .game-button:hover {
@@ -193,7 +214,7 @@ body {
 .affection-fill {
     height: 100%;
     width: 0;
-    background-color: #4CAF50;
+    background-color: var(--secondary-color);
     transition: width 0.3s ease;
 }
 
@@ -254,7 +275,7 @@ body {
 }
 
 .release-button {
-    background-color: #FF4444;
+    background-color: var(--danger-color);
     margin-left: 15px;
     display: flex;
     flex-direction: column;
@@ -263,7 +284,7 @@ body {
 }
 
 .release-button:hover {
-    background-color: #FF0000;
+    background-color: var(--danger-dark);
 }
 
 .release-button small {
@@ -545,8 +566,8 @@ body {
 .action-button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--white);
     border: none;
     border-radius: 5px;
     cursor: pointer;
