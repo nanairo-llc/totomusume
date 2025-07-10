@@ -253,7 +253,6 @@ class FishingGame {
     }
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-    const { TEXT, WEATHER_EMOJI } = await import('./constants.js');
+window.addEventListener('DOMContentLoaded', () => {
     new FishingGame();
 });
