@@ -675,3 +675,152 @@ body {
     align-items: center;
     min-height: 200px;
 }
+
+/* ========== ルアー選択モーダル ========== */
+.lure-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 340px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.lure-option-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 16px;
+    background-color: #f0f8ff;
+    border: 2px solid #1E90FF;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    text-align: left;
+    width: 100%;
+    gap: 3px;
+}
+
+.lure-option-button:hover {
+    background-color: #1E90FF;
+    color: white;
+}
+
+.lure-name {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.lure-hint {
+    font-size: 12px;
+    color: #777;
+}
+
+.lure-option-button:hover .lure-hint {
+    color: #cce5ff;
+}
+
+.lure-count {
+    font-size: 12px;
+    color: #555;
+}
+
+.lure-option-button:hover .lure-count {
+    color: #dde;
+}
+
+/* キャンセルボタン共通 */
+.cancel-button {
+    background-color: #999 !important;
+    box-shadow: none !important;
+}
+
+.cancel-button:hover {
+    background-color: #777 !important;
+}
+
+/* ========== 放流確認モーダル ========== */
+.confirm-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.release-button-yes {
+    background-color: #FF4444 !important;
+}
+
+.release-button-yes:hover {
+    background-color: #CC0000 !important;
+}
+
+/* ========== トースト通知 ========== */
+.toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.78);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-size: 15px;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ========== 釣具店：直接購入セクション ========== */
+.shop-section {
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+.direct-items {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.direct-item-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 160px;
+}
+
+.direct-item-card h4 {
+    color: #333;
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.direct-item-card p {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.item-price {
+    font-weight: bold;
+    color: #1E90FF !important;
+    font-size: 15px !important;
+    margin-bottom: 8px !important;
+}
+
+.buy-button {
+    margin-top: 8px;
+    padding: 8px 18px;
+    font-size: 14px;
+}

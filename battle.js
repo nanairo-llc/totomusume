@@ -107,27 +107,33 @@ class BattleGame {
         let opponentProgress = 0;
         const goalPosition = this.battleField.offsetWidth - 150; // ゴールラインまでの距離を調整
         
+        let raceFinished = false;
+
         const raceInterval = setInterval(() => {
+            if (raceFinished) return;
+
             // ランダムな進行度を加算
             playerProgress += Math.random() * 5;
             opponentProgress += Math.random() * 5;
-            
+
             // パワーに応じてボーナス進行度を加算
             playerProgress += playerPower / 100;
             opponentProgress += opponentPower / 100;
-            
-            // 位置の更新
+
+            // 位置の更新（画面表示用にclamp）
             const playerPosition = Math.min(goalPosition, (playerProgress / 100) * goalPosition);
             const opponentPosition = Math.min(goalPosition, (opponentProgress / 100) * goalPosition);
-            
+
             this.playerSwimmer.style.transform = `translateX(${playerPosition}px)`;
             this.opponentSwimmer.style.transform = `translateX(${opponentPosition}px)`;
-            
-            // レース終了判定
-            if (playerPosition >= goalPosition || opponentPosition >= goalPosition) {
+
+            // レース終了判定：どちらかが100%に達したらフラグを立て即座に確定
+            // clampされた位置ではなく生の進行度で比較することで同着バグを修正
+            if (playerProgress >= 100 || opponentProgress >= 100) {
+                raceFinished = true;
                 clearInterval(raceInterval);
                 setTimeout(() => {
-                    this.showResult(playerPosition > opponentPosition);
+                    this.showResult(playerProgress >= opponentProgress);
                 }, 500);
             }
         }, 50);

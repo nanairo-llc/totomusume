@@ -9,7 +9,6 @@ class FishingGame {
 
     initializeElements() {
         this.fishingLine = document.getElementById('fishing-line');
-        this.fishShadow = document.getElementById('fish-shadow');
         this.fishingButton = document.getElementById('fishing-button');
         this.resultPopup = document.getElementById('result-popup');
         this.catchResult = document.getElementById('catch-result');
@@ -17,6 +16,11 @@ class FishingGame {
         this.fishCount = document.getElementById('fish-count');
         this.playerLevel = document.getElementById('player-level');
         this.weatherInfo = document.getElementById('weather-info');
+
+        // ルアー選択モーダル
+        this.lurePopup = document.getElementById('lure-popup');
+        this.lureOptions = document.getElementById('lure-options');
+        this.lureCancelButton = document.getElementById('lure-cancel-button');
     }
 
     initializeEventListeners() {
@@ -26,15 +30,28 @@ class FishingGame {
 
     initializeWeather() {
         const weathers = ['sunny', 'cloudy', 'rainy'];
-        this.currentWeather = weathers[Math.floor(Math.random() * weathers.length)];
-        
+
+        // 天気を日次でlocalStorageに保存（ページ遷移しても当日は同じ天気）
+        const today = new Date().toDateString();
+        const savedDate = localStorage.getItem('weatherDate');
+        const savedWeather = localStorage.getItem('weather');
+
+        if (savedDate === today && savedWeather) {
+            this.currentWeather = savedWeather;
+        } else {
+            this.currentWeather = weathers[Math.floor(Math.random() * weathers.length)];
+            localStorage.setItem('weather', this.currentWeather);
+            localStorage.setItem('weatherDate', today);
+        }
+
+        // game-constants.js で定義された定数を使用
         this.weatherInfo.textContent = `${WEATHER_EMOJI[this.currentWeather]} ${TEXT.WEATHER[this.currentWeather.toUpperCase()]}`;
     }
 
     loadGameState() {
         const savedTotalCatch = localStorage.getItem('totalCatch');
         this.totalCatch = savedTotalCatch ? parseInt(savedTotalCatch) : 0;
-        
+
         const savedItems = localStorage.getItem('items');
         this.items = savedItems ? JSON.parse(savedItems) : {
             'キラキラミノー（赤）': 0,
@@ -45,23 +62,29 @@ class FishingGame {
             'ドリームワーム（金）': 0,
             'ふわとろオキアミ団子': 0
         };
-        
+
         this.updateStats();
     }
 
-    startFishing() {
+    async startFishing() {
         if (this.gameState !== 'waiting') return;
-        
-        const lureChoice = this.showLureDialog();
-        if (!lureChoice) return;
+
+        // ボタンを先に無効化してからモーダルを表示
+        this.fishingButton.disabled = true;
+        const lureChoice = await this.showLureDialog();
+
+        if (!lureChoice) {
+            // キャンセルされた場合はボタンを戻す
+            this.fishingButton.disabled = false;
+            return;
+        }
 
         this.currentLure = lureChoice;
         this.gameState = 'fishing';
-        this.fishingButton.disabled = true;
-        
+
         const lineLength = 500;
         this.fishingLine.style.height = `${lineLength}px`;
-        
+
         const catchTime = 3000 + Math.random() * 2000;
         setTimeout(() => {
             this.checkCatch(this.currentLure);
@@ -69,46 +92,69 @@ class FishingGame {
     }
 
     showLureDialog() {
-        const lures = [
-            { name: TEXT.FISHING.NORMAL_FISHING, baseRate: 20, type: 'normal' },
-            { name: 'キラキラミノー（赤）', baseRate: 45, type: 'red', count: this.items['キラキラミノー（赤）'] },
-            { name: 'キラキラミノー（緑）', baseRate: 45, type: 'green', count: this.items['キラキラミノー（緑）'] },
-            { name: 'キラキラミノー（金）', baseRate: 60, type: 'gold', count: this.items['キラキラミノー（金）'] },
-            { name: 'ドリームワーム（赤）', baseRate: 45, type: 'red', count: this.items['ドリームワーム（赤）'] },
-            { name: 'ドリームワーム（緑）', baseRate: 45, type: 'green', count: this.items['ドリームワーム（緑）'] },
-            { name: 'ドリームワーム（金）', baseRate: 60, type: 'gold', count: this.items['ドリームワーム（金）'] },
-            { name: 'ふわとろオキアミ団子', baseRate: 50, type: 'bait', count: this.items['ふわとろオキアミ団子'] }
-        ];
+        return new Promise((resolve) => {
+            const lures = [
+                { name: TEXT.FISHING.NORMAL_FISHING, baseRate: 20, type: 'normal' },
+                { name: 'キラキラミノー（赤）', baseRate: 45, type: 'red', count: this.items['キラキラミノー（赤）'] },
+                { name: 'キラキラミノー（緑）', baseRate: 45, type: 'green', count: this.items['キラキラミノー（緑）'] },
+                { name: 'キラキラミノー（金）', baseRate: 60, type: 'gold', count: this.items['キラキラミノー（金）'] },
+                { name: 'ドリームワーム（赤）', baseRate: 45, type: 'red', count: this.items['ドリームワーム（赤）'] },
+                { name: 'ドリームワーム（緑）', baseRate: 45, type: 'green', count: this.items['ドリームワーム（緑）'] },
+                { name: 'ドリームワーム（金）', baseRate: 60, type: 'gold', count: this.items['ドリームワーム（金）'] },
+                { name: 'ふわとろオキアミ団子', baseRate: 50, type: 'bait', count: this.items['ふわとろオキアミ団子'] }
+            ];
 
-        let message = TEXT.FISHING.SELECT_LURE;
-        message += `0: ${TEXT.FISHING.NORMAL_FISHING}\n`;
-        lures.slice(1).forEach((lure, index) => {
-            if (lure.count > 0) {
-                message += `${index + 1}: ${lure.name} (所持数: ${lure.count})\n`;
-            }
+            // 天気ヒントのマッピング
+            const weatherHints = {
+                red: '☁️ 曇りの日に◎',
+                green: '☀️ 晴れの日に◎',
+                gold: '🌟 天気問わず安定',
+                bait: '⚓ 天気問わず',
+                normal: ''
+            };
+
+            this.lureOptions.innerHTML = '';
+
+            lures.forEach((lure, index) => {
+                // 所持していないルアーは表示しない（通常釣りは常に表示）
+                if (index > 0 && lure.count <= 0) return;
+
+                const btn = document.createElement('button');
+                btn.className = 'lure-option-button';
+
+                const hint = weatherHints[lure.type] || '';
+                const countHTML = index > 0
+                    ? `<span class="lure-count">所持数: ${lure.count}</span>`
+                    : '';
+
+                btn.innerHTML = `
+                    <span class="lure-name">${lure.name}</span>
+                    ${hint ? `<span class="lure-hint">${hint}</span>` : ''}
+                    ${countHTML}
+                `;
+
+                btn.addEventListener('click', () => {
+                    if (index > 0) {
+                        this.items[lure.name]--;
+                        this.saveGameState();
+                    }
+                    this.lurePopup.classList.add('hidden');
+                    this.lureCancelButton.removeEventListener('click', cancelHandler);
+                    resolve(lure);
+                });
+
+                this.lureOptions.appendChild(btn);
+            });
+
+            const cancelHandler = () => {
+                this.lurePopup.classList.add('hidden');
+                this.lureCancelButton.removeEventListener('click', cancelHandler);
+                resolve(null);
+            };
+
+            this.lureCancelButton.addEventListener('click', cancelHandler);
+            this.lurePopup.classList.remove('hidden');
         });
-
-        const choice = prompt(message, '0');
-        if (choice === null) return null;
-        
-        const selectedIndex = parseInt(choice);
-        if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= lures.length) {
-            alert(TEXT.FISHING.INVALID_CHOICE);
-            return lures[0];
-        }
-
-        const selectedLure = lures[selectedIndex];
-        if (selectedIndex > 0 && selectedLure.count <= 0) {
-            alert(TEXT.FISHING.NO_LURE);
-            return lures[0];
-        }
-
-        if (selectedIndex > 0) {
-            this.items[selectedLure.name]--;
-            this.saveGameState();
-        }
-
-        return selectedLure;
     }
 
     calculateCatchRate(lure) {
@@ -116,46 +162,45 @@ class FishingGame {
         if (lure.type === 'gold' || lure.type === 'bait') {
             return lure.baseRate;
         }
-        
+
         let rate = lure.baseRate;
-        
-        // 天気による補正
+
+        // 天気による補正（オブジェクトで一元管理）
         const weatherModifiers = {
-            sunny: { type: 'green', modifier: 1.5 },
-            cloudy: { type: 'red', modifier: 1.5 },
-            rainy: { modifier: 0.7 }
+            sunny:  { type: 'green', modifier: 1.5 },
+            cloudy: { type: 'red',   modifier: 1.5 },
+            rainy:  {                modifier: 0.7 }
         };
-        
+
         const weatherEffect = weatherModifiers[this.currentWeather];
-        
         if (weatherEffect) {
             if (weatherEffect.type && lure.type === weatherEffect.type) {
                 rate *= weatherEffect.modifier;
-            } else if (weatherEffect.modifier && !weatherEffect.type) {
+            } else if (!weatherEffect.type) {
                 rate *= weatherEffect.modifier;
             }
         }
-        
+
         return rate;
     }
 
     checkCatch(lure) {
         const totGirls = [
-            { 
-                name: "シーバス", 
-                rarity: "ノーマル", 
+            {
+                name: "シーバス",
+                rarity: "ノーマル",
                 description: "クールでミステリアスな都会派お姉さん。誰にも媚びず、どこか影を感じさせるが、実は人知れず努力家",
                 image: "images/seabass.PNG"
             },
-            { 
-                name: "真鯛", 
-                rarity: "レア", 
+            {
+                name: "真鯛",
+                rarity: "レア",
                 description: "優雅でおっとりしたお嬢様。礼儀正しく上品だが、芯の強さを持っている。みんなのまとめ役",
                 image: "images/madai.PNG"
             },
-            { 
-                name: "メバル", 
-                rarity: "ノーマル", 
+            {
+                name: "メバル",
+                rarity: "ノーマル",
                 description: "小柄で元気な探検少女タイプ。暗い場所が好きで、ナイトスイマーとして活躍。友達想いで怖がりな一面も",
                 image: "images/mebaru.PNG"
             }
@@ -163,7 +208,7 @@ class FishingGame {
 
         const catchRate = this.calculateCatchRate(lure);
         const result = Math.random() * 100;
-        
+
         if (result <= catchRate) {
             let weightedTotGirls = totGirls.map(tot => {
                 let weight = 1;
@@ -175,7 +220,7 @@ class FishingGame {
 
             const totalWeight = weightedTotGirls.reduce((sum, { weight }) => sum + weight, 0);
             let random = Math.random() * totalWeight;
-            
+
             let caught = null;
             for (const { tot, weight } of weightedTotGirls) {
                 random -= weight;
@@ -194,7 +239,7 @@ class FishingGame {
 
         this.updateStats();
         this.saveGameState();
-        
+
         this.fishingLine.style.height = '0';
         this.gameState = 'waiting';
         this.fishingButton.disabled = false;
@@ -203,17 +248,15 @@ class FishingGame {
     addToAquarium(caught) {
         const savedTots = localStorage.getItem('caughtTots');
         const tots = savedTots ? JSON.parse(savedTots) : [];
-        
-        const newTot = {
+
+        tots.push({
             name: caught.name,
             rarity: caught.rarity,
             description: caught.description,
             image: caught.image,
-            affection: 0  // 親密度は明示的に0から開始
-        };
-        
-        tots.push(newTot);
-        
+            affection: 0   // 親密度は明示的に0から開始
+        });
+
         localStorage.setItem('caughtTots', JSON.stringify(tots));
     }
 

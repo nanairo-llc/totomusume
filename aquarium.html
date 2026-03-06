@@ -44,6 +44,20 @@
             </div>
         </div>
     </div>
+        <!-- 放流確認ポップアップ -->
+        <div id="release-confirm-popup" class="popup hidden">
+            <div class="popup-content">
+                <h2>放流確認</h2>
+                <p id="release-confirm-message" style="margin: 15px 0; font-size: 16px;"></p>
+                <div class="confirm-buttons">
+                    <button id="release-yes-button" class="action-button release-button-yes">はい、放流する</button>
+                    <button id="release-no-button" class="action-button cancel-button">キャンセル</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- トースト通知 -->
+        <div id="toast-message" class="toast hidden"></div>
     <script src="aquarium.js"></script>
 </body>
 </html>

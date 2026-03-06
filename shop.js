@@ -11,20 +11,22 @@ class ShopGame {
         this.resultPopup = document.getElementById('gacha-result');
         this.resultContent = document.getElementById('result-content');
         this.closeResult = document.getElementById('close-result');
+        this.buyFoodButton = document.getElementById('buy-food-button');
     }
 
     initializeEventListeners() {
         this.gachaButton.addEventListener('click', () => this.drawGacha());
         this.closeResult.addEventListener('click', () => this.hideResult());
+        if (this.buyFoodButton) {
+            this.buyFoodButton.addEventListener('click', () => this.buyFood());
+        }
     }
 
     loadGameState() {
-        // 所持金の読み込み
         const savedMoney = localStorage.getItem('money');
         this.moneyAmount = savedMoney ? parseInt(savedMoney) : 1000;
         this.updateMoneyDisplay();
 
-        // アイテムの読み込み
         const savedItems = localStorage.getItem('items');
         this.items = savedItems ? JSON.parse(savedItems) : {
             'キラキラミノー（赤）': 0,
@@ -36,7 +38,6 @@ class ShopGame {
             'ふわとろオキアミ団子': 0
         };
 
-        // 所持アイテムの表示を更新
         this.updateItemList();
     }
 
@@ -68,9 +69,29 @@ class ShopGame {
         this.money.textContent = this.moneyAmount;
     }
 
+    buyFood() {
+        const FOOD_COST = 150;
+        const FOOD_AMOUNT = 3;
+
+        if (this.moneyAmount < FOOD_COST) {
+            this.showMessage('所持金が足りません！\nバトルに勝つか、とと娘を放流してお金を稼ぎましょう。');
+            return;
+        }
+
+        this.moneyAmount -= FOOD_COST;
+        this.updateMoneyDisplay();
+        this.saveGameState();
+
+        // 餌をlocalStorageに加算（水槽画面と共有）
+        const currentFood = parseInt(localStorage.getItem('foodCount') ?? '5');
+        localStorage.setItem('foodCount', (currentFood + FOOD_AMOUNT).toString());
+
+        this.showMessage(`餌を${FOOD_AMOUNT}個購入しました！\n（現在の餌: ${currentFood + FOOD_AMOUNT}個）`);
+    }
+
     drawGacha() {
         if (this.moneyAmount < 100) {
-            alert('所持金が足りません！');
+            this.showMessage('所持金が足りません！');
             return;
         }
 
@@ -87,7 +108,6 @@ class ShopGame {
             { name: 'ふわとろオキアミ団子', rarity: 'N', rate: 30, description: '天気に左右されない餌。基本の釣果は低め' }
         ];
 
-        // 抽選処理
         const rand = Math.random() * 100;
         let sumRate = 0;
         let drawnItem = null;
@@ -100,11 +120,8 @@ class ShopGame {
             }
         }
 
-        // アイテム獲得処理
         this.items[drawnItem.name]++;
         this.saveGameState();
-
-        // 結果表示
         this.showResult(drawnItem);
     }
 
@@ -128,7 +145,15 @@ class ShopGame {
             <p style="margin-top: 10px;">所持数: ${this.items[item.name]}</p>
         `;
         this.resultPopup.classList.remove('hidden');
-        this.updateItemList(); // 所持アイテムリストを更新
+        this.updateItemList();
+    }
+
+    // 汎用メッセージ表示（alert() の代替）
+    showMessage(message) {
+        this.resultContent.innerHTML = `
+            <p style="font-size: 16px; line-height: 1.6; margin: 20px 0; white-space: pre-line;">${message}</p>
+        `;
+        this.resultPopup.classList.remove('hidden');
     }
 
     hideResult() {
@@ -136,7 +161,6 @@ class ShopGame {
     }
 }
 
-// ゲームの初期化
 window.addEventListener('DOMContentLoaded', () => {
     new ShopGame();
 });

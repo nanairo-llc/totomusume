@@ -17,6 +17,15 @@ class AquariumGame {
         this.playButton = document.getElementById('play-button');
         this.closeButton = document.getElementById('close-detail');
         this.foodCount = document.getElementById('food-count');
+
+        // 放流確認モーダル
+        this.releaseConfirmPopup = document.getElementById('release-confirm-popup');
+        this.releaseConfirmMessage = document.getElementById('release-confirm-message');
+        this.releaseYesButton = document.getElementById('release-yes-button');
+        this.releaseNoButton = document.getElementById('release-no-button');
+
+        // トースト通知
+        this.toastDiv = document.getElementById('toast-message');
     }
 
     initializeEventListeners() {
@@ -26,16 +35,13 @@ class AquariumGame {
     }
 
     loadGameState() {
-        // とと娘データの読み込み
         const savedTots = localStorage.getItem('caughtTots');
         this.tots = savedTots ? JSON.parse(savedTots) : [];
-        
-        // 餌の数を読み込む
+
         const savedFood = localStorage.getItem('foodCount');
         this.food = savedFood ? parseInt(savedFood) : 5;
         this.foodCount.textContent = this.food;
 
-        // 所持金を読み込む
         const savedMoney = localStorage.getItem('money');
         this.money = savedMoney ? parseInt(savedMoney) : 1000;
     }
@@ -49,14 +55,11 @@ class AquariumGame {
     displayTotGirls() {
         this.totList.innerHTML = '';
         if (this.tots.length === 0) {
-            // アイテムがない状態 → 空状態クラスを付与
             this.totList.classList.add('tot-list-empty');
-            this.totList.innerHTML = `<p class="explanation" style="text-align: center; padding: 20px;">${TEXT.AQUARIUM.EMPTY_STATE}</p>`;
+            this.totList.innerHTML = '<p class="explanation" style="text-align: center; padding: 20px;">まだとと娘が釣れていません。<br>釣りに行って、とと娘を見つけましょう！</p>';
             return;
-        } else {
-            // アイテムがある状態 → クラスを外す
-            this.totList.classList.remove('tot-list-empty');
         }
+        this.totList.classList.remove('tot-list-empty');
 
         this.tots.forEach((tot, index) => {
             const totItem = document.createElement('div');
@@ -72,48 +75,56 @@ class AquariumGame {
                     </button>
                 </div>
             `;
-            
-            // 詳細表示のイベントリスナー
+
             totItem.querySelector('img').addEventListener('click', () => this.showDetail(index));
-            
-            // 放流ボタンのイベントリスナー
             totItem.querySelector('.release-button').addEventListener('click', () => this.releaseTot(index));
-            
+
             this.totList.appendChild(totItem);
         });
     }
 
     releaseTot(index) {
         const tot = this.tots[index];
-        if (confirm(TEXT.AQUARIUM.RELEASE_CONFIRM.replace('{name}', tot.name))) {
-            // とと娘を放流（配列から削除）
+
+        // confirm() の代わりにカスタムモーダルを使用
+        this.releaseConfirmMessage.textContent = `${tot.name}を放流しますか？ 報酬として30円を獲得できます。`;
+        this.releaseConfirmPopup.classList.remove('hidden');
+
+        const yesHandler = () => {
             this.tots.splice(index, 1);
-            
-            // 報酬を付与
             this.money += 30;
-            
-            // 状態を保存
             this.saveGameState();
-            
-            // リストを更新
             this.displayTotGirls();
-            
-            alert(TEXT.AQUARIUM.RELEASE_SUCCESS);
-        }
+            this.releaseConfirmPopup.classList.add('hidden');
+            this.showToast('放流しました。報酬として30円を獲得しました！');
+            cleanup();
+        };
+
+        const noHandler = () => {
+            this.releaseConfirmPopup.classList.add('hidden');
+            cleanup();
+        };
+
+        const cleanup = () => {
+            this.releaseYesButton.removeEventListener('click', yesHandler);
+            this.releaseNoButton.removeEventListener('click', noHandler);
+        };
+
+        this.releaseYesButton.addEventListener('click', yesHandler);
+        this.releaseNoButton.addEventListener('click', noHandler);
     }
 
     showDetail(index) {
         this.currentTotIndex = index;
         const tot = this.tots[index];
-        
+
         this.detailImage.src = tot.image;
         this.detailImage.alt = tot.name;
         this.detailName.textContent = tot.name;
         this.detailAffection.textContent = tot.affection || 0;
-        
-        // 親密度メーターの更新
+
         this.updateAffectionMeter(tot.affection || 0);
-        
+
         this.aquariumDetail.classList.remove('hidden');
     }
 
@@ -126,7 +137,7 @@ class AquariumGame {
         return Math.min(100, (affection / 100) * 100);
     }
 
-    // 親密度メーターの更新ヘルパーメソッド
+    // 親密度メーターの更新ヘルパーメソッド（リモートから統合）
     updateAffectionMeter(affection) {
         const affectionPercent = this.calculateAffectionPercent(affection);
         this.affectionFill.style.width = `${affectionPercent}%`;
@@ -134,20 +145,20 @@ class AquariumGame {
 
     feedTot() {
         if (this.food <= 0) {
-            alert(TEXT.AQUARIUM.NO_FOOD);
+            // alert() の代わりにトーストを使用。メッセージも実際の商品名に修正
+            this.showToast('餌がありません！ 釣具店で餌セットを購入できます。');
             return;
         }
 
         this.food--;
         this.foodCount.textContent = this.food;
-        
+
         const tot = this.tots[this.currentTotIndex];
         tot.affection = (tot.affection || 0) + 1;
         this.detailAffection.textContent = tot.affection;
-        
-        // 親密度メーターの更新
+
         this.updateAffectionMeter(tot.affection);
-        
+
         this.saveGameState();
         this.displayTotGirls();
     }
@@ -156,17 +167,24 @@ class AquariumGame {
         const tot = this.tots[this.currentTotIndex];
         tot.affection = (tot.affection || 0) + 2;
         this.detailAffection.textContent = tot.affection;
-        
-        // 親密度メーターの更新
+
         this.updateAffectionMeter(tot.affection);
-        
+
         this.saveGameState();
         this.displayTotGirls();
     }
+
+    // トースト通知（alert/confirm の代替）
+    showToast(message, duration = 2500) {
+        this.toastDiv.textContent = message;
+        this.toastDiv.classList.remove('hidden');
+        clearTimeout(this._toastTimer);
+        this._toastTimer = setTimeout(() => {
+            this.toastDiv.classList.add('hidden');
+        }, duration);
+    }
 }
 
-// ゲームの初期化
-window.addEventListener('DOMContentLoaded', async () => {
-    const { TEXT } = await import('./constants.js');
+window.addEventListener('DOMContentLoaded', () => {
     new AquariumGame();
 });
